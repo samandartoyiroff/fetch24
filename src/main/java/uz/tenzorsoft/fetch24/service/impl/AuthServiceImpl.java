@@ -63,10 +63,10 @@ public class AuthServiceImpl implements AuthService {
             if (resetPasswordDto.getNewPassword().length()>=6){
 
                 user.setPassword(passwordEncoder.encode(resetPasswordDto.getNewPassword()));
+
                 User save = userRepository.save(user);
 
-
-                return ResponseEntity.ok(userMapper.toDto(user));
+                return ResponseEntity.ok(userMapper.toDto(save));
 
             }
             else {
