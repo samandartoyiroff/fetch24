@@ -16,6 +16,8 @@ public class NewsResponseDto {
 
     private Long id;
 
+    private String headImage;
+
     private String title;
 
     private String description;

@@ -40,15 +40,13 @@ public class SecurityConfig {
 
                     //AUTH
                     .requestMatchers(
-                            "/api/v1/auth/login",
-                            "/api/v1/auth/employee",
-                            "/api/v1/department/create"
+                            "/api/v1/auth/login"
                     ).permitAll()
 
-                    // DOCUMENT
+                    // NEWS
 
                     .requestMatchers(
-                            "/api/v1/document/upload"
+                            "/api/v1/news/findAllPagination/notDeleted"
                     ).permitAll()
 
                     //SWAGGER
@@ -57,13 +55,6 @@ public class SecurityConfig {
                             "/swagger-ui/**",
                             "/swagger-resources/**",
                             "/swagger-ui.html"
-                    ).permitAll()
-
-                    //APPLICATION
-                    .requestMatchers(
-                            "/api/v1/application/apply",
-                            "/api/v1/application/download/example/appication",
-                            "/api/v1/application/download/writing-application"
                     ).permitAll()
 
                     .anyRequest().authenticated();

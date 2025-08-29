@@ -2,9 +2,11 @@ package uz.tenzorsoft.fetch24.controller;
 
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
@@ -18,13 +20,14 @@ public class NewsController {
     private final NewsService newsService;
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PostMapping("/create")
+    @PostMapping(value = "/create",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createNews(
-            @RequestBody @Valid NewsCreateDto newsCreateDto,
+            @RequestPart(name = "newsCreateDto") @Valid NewsCreateDto newsCreateDto,
+            @RequestPart(name = "headImage") MultipartFile headImage,
             @RequestHeader(name = "lang", defaultValue = "uz") String lang
             ) {
 
-        return newsService.create(newsCreateDto, lang);
+        return newsService.create(newsCreateDto, lang, headImage);
 
     }
 
@@ -37,20 +40,23 @@ public class NewsController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/updateById/{id}")
+    @PutMapping(value = "/updateById/{id}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> updateById(
             @PathVariable Long id,
+            @RequestPart(name = "headImage", required = false) MultipartFile headImage,
             @RequestHeader(name = "lang") String lang,
-            @RequestBody @Valid NewsUpdateDto newsUpdateDto
+            @RequestPart @Valid NewsUpdateDto newsUpdateDto
             ){
-        return newsService.updateById(id, lang, newsUpdateDto);
+        return newsService.updateById(id, lang, newsUpdateDto, headImage);
     }
 
     @GetMapping("/findAllPagination/notDeleted")
     public ResponseEntity<?> findAllPaginationNotDeleted(
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
+            @RequestHeader(name = "lang", defaultValue = "uz") String lang,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestHeader(name = "size", defaultValue = "10") Integer size
     ){
-        return newsService.findAllNotDeleted(lang);
+        return newsService.findAllNotDeleted(lang, page, size);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -64,9 +70,11 @@ public class NewsController {
 
     @GetMapping("/findAllPagination/deleted")
     public ResponseEntity<?> findAllPaginationDeleted(
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
+            @RequestHeader(name = "lang", defaultValue = "uz") String lang,
+            @RequestParam(name = "page", defaultValue = "0") Integer page,
+            @RequestParam(name = "size", defaultValue = "10") Integer size
     ){
-        return newsService.findAllDeleted(lang);
+        return newsService.findAllDeleted(lang, page, size);
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")

@@ -1,9 +1,6 @@
 package uz.tenzorsoft.fetch24.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -22,22 +19,34 @@ public class News extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "text")
+    private String headImage;
+
+    @Column(columnDefinition = "text")
     private String titleUz;
 
+    @Column(columnDefinition = "text")
     private String titleRu;
 
+    @Column(columnDefinition = "text")
     private String titleEn;
 
+    @Column(columnDefinition = "text")
     private String descriptionUz;
 
+    @Column(columnDefinition = "text")
     private String descriptionRu;
 
+    @Column(columnDefinition = "text")
     private String descriptionEn;
 
+    @Column(columnDefinition = "text")
     private String contentUz;
 
+    @Column(columnDefinition = "text")
     private String contentRu;
 
+    @Column(columnDefinition = "text")
     private String contentEn;
 
     private String redirectUrl;

@@ -1,5 +1,6 @@
 package uz.tenzorsoft.fetch24.repository;
 
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import uz.tenzorsoft.fetch24.domain.News;
@@ -12,10 +13,10 @@ import java.util.Optional;
 public interface NewsRepository extends JpaRepository<News, Long> {
     Optional<News> findByIdAndDeletedFalse(Long id);
 
-    List<News> findAllByDeletedFalse();
+    List<News> findAllByDeletedFalse(PageRequest pageRequest);
 
 
-    List<News> findAllByDeletedTrue();
+    List<News> findAllByDeletedTrue(PageRequest pageRequest);
 
 }
 

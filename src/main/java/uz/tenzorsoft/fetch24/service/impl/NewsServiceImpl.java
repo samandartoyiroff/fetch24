@@ -1,9 +1,12 @@
 package uz.tenzorsoft.fetch24.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
@@ -11,6 +14,7 @@ import uz.tenzorsoft.fetch24.dto.response.NewsResponseDto;
 import uz.tenzorsoft.fetch24.exception.ResourceNotFoundException;
 import uz.tenzorsoft.fetch24.mapper.NewsMapper;
 import uz.tenzorsoft.fetch24.repository.NewsRepository;
+import uz.tenzorsoft.fetch24.service.FileService;
 import uz.tenzorsoft.fetch24.service.NewsService;
 
 import java.util.List;
@@ -22,10 +26,12 @@ public class NewsServiceImpl implements NewsService {
     private final NewsMapper newsMapper;
 
     private final NewsRepository newsRepository;
-    @Override
-    public ResponseEntity<?> create(NewsCreateDto newsCreateDto, String lang) {
 
-        News news = newsMapper.toEntity(lang, newsCreateDto);
+    private final FileService fileService;
+    @Override
+    public ResponseEntity<?> create(NewsCreateDto newsCreateDto, String lang, MultipartFile headImage) {
+
+        News news = newsMapper.toEntity(lang, newsCreateDto, headImage);
 
         News save = newsRepository.save(news);
 
@@ -49,13 +55,13 @@ public class NewsServiceImpl implements NewsService {
 
     @Transactional
     @Override
-    public ResponseEntity<?> updateById(Long id, String lang, NewsUpdateDto newsUpdateDto) {
+    public ResponseEntity<?> updateById(Long id, String lang, NewsUpdateDto newsUpdateDto, MultipartFile headImage) {
 
 
         News news = newsRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Yangilik topilmadi"));
 
-        News newNews = newsMapper.updateNews(lang, news, newsUpdateDto);
+        News newNews = newsMapper.updateNews(lang, news, newsUpdateDto, headImage);
 
         News save = newsRepository.save(newNews);
 
@@ -64,9 +70,11 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public ResponseEntity<?> findAllNotDeleted(String lang) {
+    public ResponseEntity<?> findAllNotDeleted(String lang, Integer page, Integer size) {
 
-        List<News> news = newsRepository.findAllByDeletedFalse();
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        List<News> news = newsRepository.findAllByDeletedFalse(pageRequest);
 
         return ResponseEntity.ok( newsMapper.toList(lang, news));
 
@@ -88,9 +96,11 @@ public class NewsServiceImpl implements NewsService {
     }
 
     @Override
-    public ResponseEntity<?> findAllDeleted(String lang) {
+    public ResponseEntity<?> findAllDeleted(String lang, Integer page, Integer size) {
 
-        List<News> news = newsRepository.findAllByDeletedTrue();
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+
+        List<News> news = newsRepository.findAllByDeletedTrue(pageRequest);
 
         return ResponseEntity.ok(newsMapper.toList(lang, news));
 

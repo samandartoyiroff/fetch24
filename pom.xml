@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>uz.tenzor-soft</groupId>
-    <artifactId>fetch-24</artifactId>
+    <artifactId>Tech24</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>fetch-24</name>
     <description>fetch-24</description>

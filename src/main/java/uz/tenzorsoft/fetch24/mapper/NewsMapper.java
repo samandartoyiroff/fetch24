@@ -1,10 +1,12 @@
 package uz.tenzorsoft.fetch24.mapper;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
 import uz.tenzorsoft.fetch24.dto.response.NewsResponseDto;
+import uz.tenzorsoft.fetch24.service.FileService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +14,13 @@ import java.util.List;
 @Component
 public class NewsMapper {
 
-    public News toEntity(String lang, NewsCreateDto dto) {
+    private final FileService fileService;
+
+    public NewsMapper(FileService fileService) {
+        this.fileService = fileService;
+    }
+
+    public News toEntity(String lang, NewsCreateDto dto, MultipartFile headImage) {
         News news = new News();
         news.setRedirectUrl(dto.getRedirectUrl());
 
@@ -34,6 +42,10 @@ public class NewsMapper {
             }
             default -> throw new IllegalArgumentException("Unsupported language: " + lang);
         }
+
+        String base64 = fileService.base64(headImage);
+
+        news.setHeadImage(base64);
 
         return news;
     }
@@ -74,7 +86,6 @@ public class NewsMapper {
             else if (news.getDescriptionRu() != null) description = news.getDescriptionRu();
         }
 
-        // --- CONTENT ---
         if ("uz".equalsIgnoreCase(lang) && news.getContentUz() != null) {
             content = news.getContentUz();
         } else if ("en".equalsIgnoreCase(lang) && news.getContentEn() != null) {
@@ -91,6 +102,7 @@ public class NewsMapper {
 
         return new NewsResponseDto(
                 news.getId(),
+                news.getHeadImage(),
                 title,
                 description,
                 content,
@@ -102,7 +114,7 @@ public class NewsMapper {
         );
     }
 
-    public News updateNews(String lang, News news, NewsUpdateDto dto) {
+    public News updateNews(String lang, News news, NewsUpdateDto dto, MultipartFile headImage) {
         if (news == null || dto == null) {
             return news;
         }
@@ -130,6 +142,14 @@ public class NewsMapper {
             news.setRedirectUrl(dto.getRedirectUrl());
         }
 
+        if (headImage != null) {
+
+            String base64 = fileService.base64(headImage);
+
+            news.setHeadImage(base64);
+
+        }
+
         return news;
     }
 
@@ -146,8 +166,6 @@ public class NewsMapper {
         });
 
         return newsResponseDtos;
-
-
 
     }
 }
