@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: short-uz
+
+
+  profiles:
+    active: local
+
+
+
