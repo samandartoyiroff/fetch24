@@ -1,9 +1,6 @@
 package uz.tenzorsoft.fetch24.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
@@ -46,6 +43,11 @@ public class News extends BaseEntity {
 
     private boolean deleted=false;
 
+    @Enumerated(EnumType.STRING)
+    private NewsStatus status = NewsStatus.DRAFT;
 
+    private LocalDateTime unpublishAt;
+
+    private LocalDateTime deletedAt;
 
 }

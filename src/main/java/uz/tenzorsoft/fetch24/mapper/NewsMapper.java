@@ -5,7 +5,7 @@ import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
 import uz.tenzorsoft.fetch24.dto.response.NewsResponseDto;
-
+import uz.tenzorsoft.fetch24.model.NewsStatus;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +34,7 @@ public class NewsMapper {
             }
             default -> throw new IllegalArgumentException("Unsupported language: " + lang);
         }
+        news.setStatus(NewsStatus.DRAFT);
 
         return news;
     }
@@ -100,6 +101,10 @@ public class NewsMapper {
                 news.getCreatedBy(),
                 news.getUpdatedBy()
         );
+
+        dto.setStatus(news.getStatus());
+        dto.setUnpublishAt(news.getUnpublishAt());
+        dto.setDeletedAt(news.getDeletedAt());
     }
 
     public News updateNews(String lang, News news, NewsUpdateDto dto) {

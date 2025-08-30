@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import uz.tenzorsoft.fetch24.model.NewsStatus;
 
 import java.time.LocalDateTime;
 
@@ -35,7 +36,11 @@ public class NewsResponseDto {
 
     private Long updatedBy;
 
+    private NewsStatus status;
 
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime unpublishAt;
 
-
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")
+    private LocalDateTime deletedAt;
 }

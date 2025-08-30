@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
+import uz.tenzorsoft.fetch24.dto.request.NewsStatusUpdateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
 import uz.tenzorsoft.fetch24.dto.response.NewsResponseDto;
 import uz.tenzorsoft.fetch24.exception.ResourceNotFoundException;
@@ -104,5 +105,25 @@ public class NewsServiceImpl implements NewsService {
 
         return ResponseEntity.ok("News deleted successfully!!!");
 
+    }
+
+    @Override
+    public ResponseEntity<?> updateNewsStatus(Long id, NewsStatusUpdateDto statusUpdateDto) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> restoreNews(Long id, String lang) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> getNewsHistory(Long id) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<?> findAllPublicNews(String lang) {
+        return null;
     }
 }

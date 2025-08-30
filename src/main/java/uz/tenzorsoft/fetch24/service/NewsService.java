@@ -3,6 +3,7 @@ package uz.tenzorsoft.fetch24.service;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
+import uz.tenzorsoft.fetch24.dto.request.NewsStatusUpdateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
 
 public interface NewsService    {
@@ -21,4 +22,11 @@ public interface NewsService    {
 
     ResponseEntity<?> hardDelete(Long id);
 
+    ResponseEntity<?> updateNewsStatus(Long id, @Valid NewsStatusUpdateDto statusUpdateDto);
+
+    ResponseEntity<?> restoreNews(Long id, String lang);
+
+    ResponseEntity<?> getNewsHistory(Long id);
+
+    ResponseEntity<?> findAllPublicNews(String lang);
 }
