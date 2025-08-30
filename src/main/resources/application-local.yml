@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/fetch24
     username: postgres
-    password: root123
+    password: malika
     driver-class-name: org.postgresql.Driver
 
   jpa:

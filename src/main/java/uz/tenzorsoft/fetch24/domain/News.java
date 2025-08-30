@@ -3,7 +3,7 @@ package uz.tenzorsoft.fetch24.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
+import uz.tenzorsoft.fetch24.model.NewsStatus;
 import java.time.LocalDateTime;
 
 @Entity
@@ -55,6 +55,11 @@ public class News extends BaseEntity {
 
     private boolean deleted=false;
 
+    @Enumerated(EnumType.STRING)
+    private NewsStatus status = NewsStatus.DRAFT;
 
+    private LocalDateTime unpublishAt;
+
+    private LocalDateTime deletedAt;
 
 }

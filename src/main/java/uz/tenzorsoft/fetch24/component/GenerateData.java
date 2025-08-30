@@ -11,9 +11,6 @@ import uz.tenzorsoft.fetch24.model.RoleName;
 import uz.tenzorsoft.fetch24.repository.RoleRepository;
 import uz.tenzorsoft.fetch24.repository.UserRepository;
 
-
-
-
 @Component
 @RequiredArgsConstructor
 public class GenerateData implements CommandLineRunner {
