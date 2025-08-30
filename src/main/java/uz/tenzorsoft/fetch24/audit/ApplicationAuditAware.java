@@ -7,13 +7,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import uz.tenzorsoft.fetch24.domain.User;
-
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 public class ApplicationAuditAware implements AuditorAware<Long> {
-
     @Override
     public Optional<Long> getCurrentAuditor() {
         Authentication authentication =
@@ -21,9 +19,13 @@ public class ApplicationAuditAware implements AuditorAware<Long> {
                         .getContext()
                         .getAuthentication();
         if (authentication == null || !authentication.isAuthenticated()
-                || authentication.getPrincipal() instanceof AnonymousAuthenticationToken) {
+                || authentication instanceof AnonymousAuthenticationToken
+                || authentication.getPrincipal().equals("anonymousUser")) {
             return Optional.empty();
         }
-        return Optional.ofNullable(((User)authentication.getPrincipal()).getId());
+        if (authentication.getPrincipal() instanceof User userPrincipal) {
+            return Optional.ofNullable(userPrincipal.getId());
+        }
+        return Optional.empty();
     }
 }

@@ -16,29 +16,25 @@ public class NewsMapper {
         News news = new News();
         news.setRedirectUrl(dto.getRedirectUrl());
 
-        switch (lang.toLowerCase()) {
-            case "en" -> {
-                news.setTitleEn(dto.getTitle());
-                news.setDescriptionEn(dto.getDescription());
-                news.setContentEn(dto.getContent());
-            }
-            case "uz" -> {
-                news.setTitleUz(dto.getTitle());
-                news.setDescriptionUz(dto.getDescription());
-                news.setContentUz(dto.getContent());
-            }
-            case "ru" -> {
-                news.setTitleRu(dto.getTitle());
-                news.setDescriptionRu(dto.getDescription());
-                news.setContentRu(dto.getContent());
-            }
-            default -> throw new IllegalArgumentException("Unsupported language: " + lang);
-        }
+        news.setTitleUz(dto.getTitleUz());
+        news.setTitleRu(dto.getTitleRu());
+        news.setTitleEn(dto.getTitleEn());
+
+        news.setDescriptionUz(dto.getDescriptionUz());
+        news.setDescriptionRu(dto.getDescriptionRu());
+        news.setDescriptionEn(dto.getDescriptionEn());
+
+        news.setContentUz(dto.getContentUz());
+        news.setContentRu(dto.getContentRu());
+        news.setContentEn(dto.getContentEn());
+
+        news.setPublishedAt(dto.getPublishAt());
+        news.setUnpublishAt(dto.getUnpublishAt());
+
         news.setStatus(NewsStatus.DRAFT);
 
         return news;
     }
-
 
     public NewsResponseDto toDto(News news, String lang) {
         String title = null;
@@ -58,6 +54,7 @@ public class NewsMapper {
             if (news.getTitleUz() != null) title = news.getTitleUz();
             else if (news.getTitleEn() != null) title = news.getTitleEn();
             else if (news.getTitleRu() != null) title = news.getTitleRu();
+            else title = "No title available"; // Default fallback
         }
 
         // --- DESCRIPTION ---
@@ -73,6 +70,7 @@ public class NewsMapper {
             if (news.getDescriptionUz() != null) description = news.getDescriptionUz();
             else if (news.getDescriptionEn() != null) description = news.getDescriptionEn();
             else if (news.getDescriptionRu() != null) description = news.getDescriptionRu();
+            else description = "No description available"; // Default fallback
         }
 
         // --- CONTENT ---
@@ -88,9 +86,10 @@ public class NewsMapper {
             if (news.getContentUz() != null) content = news.getContentUz();
             else if (news.getContentEn() != null) content = news.getContentEn();
             else if (news.getContentRu() != null) content = news.getContentRu();
+            else content = "No content available"; // Default fallback
         }
 
-        return new NewsResponseDto(
+        NewsResponseDto dto = new NewsResponseDto(
                 news.getId(),
                 title,
                 description,
@@ -101,10 +100,10 @@ public class NewsMapper {
                 news.getCreatedBy(),
                 news.getUpdatedBy()
         );
-
         dto.setStatus(news.getStatus());
         dto.setUnpublishAt(news.getUnpublishAt());
         dto.setDeletedAt(news.getDeletedAt());
+        return dto;
     }
 
     public News updateNews(String lang, News news, NewsUpdateDto dto) {
@@ -112,47 +111,35 @@ public class NewsMapper {
             return news;
         }
 
-        switch (lang.toLowerCase()) {
-            case "uz" -> {
-                if (dto.getTitle() != null) news.setTitleUz(dto.getTitle());
-                if (dto.getDescription() != null) news.setDescriptionUz(dto.getDescription());
-                if (dto.getContent() != null) news.setContentUz(dto.getContent());
-            }
-            case "en" -> {
-                if (dto.getTitle() != null) news.setTitleEn(dto.getTitle());
-                if (dto.getDescription() != null) news.setDescriptionEn(dto.getDescription());
-                if (dto.getContent() != null) news.setContentEn(dto.getContent());
-            }
-            case "ru" -> {
-                if (dto.getTitle() != null) news.setTitleRu(dto.getTitle());
-                if (dto.getDescription() != null) news.setDescriptionRu(dto.getDescription());
-                if (dto.getContent() != null) news.setContentRu(dto.getContent());
-            }
-            default -> throw new IllegalArgumentException("Unsupported language: " + lang);
-        }
+        if (dto.getTitleUz() != null) news.setTitleUz(dto.getTitleUz());
+        if (dto.getTitleEn() != null) news.setTitleEn(dto.getTitleEn());
+        if (dto.getTitleRu() != null) news.setTitleRu(dto.getTitleRu());
+
+        if (dto.getDescriptionUz() != null) news.setDescriptionUz(dto.getDescriptionUz());
+        if (dto.getDescriptionEn() != null) news.setDescriptionEn(dto.getDescriptionEn());
+        if (dto.getDescriptionRu() != null) news.setDescriptionRu(dto.getDescriptionRu());
+
+        if (dto.getContentUz() != null) news.setContentUz(dto.getContentUz());
+        if (dto.getContentEn() != null) news.setContentEn(dto.getContentEn());
+        if (dto.getContentRu() != null) news.setContentRu(dto.getContentRu());
 
         if (dto.getRedirectUrl() != null) {
             news.setRedirectUrl(dto.getRedirectUrl());
         }
 
+        if (dto.getPublishAt() != null) {
+            news.setPublishedAt(dto.getPublishAt());
+        }
+        if (dto.getUnpublishAt() != null) {
+            news.setUnpublishAt(dto.getUnpublishAt());
+        }
+
         return news;
     }
 
-
-    public List<NewsResponseDto> toList(String lang, List<News> news) {
-
-
+    public List<NewsResponseDto> toList(String lang, List<News> newsList) {
         List<NewsResponseDto> newsResponseDtos = new ArrayList<>();
-
-        news.forEach(newsDto -> {
-
-            newsResponseDtos.add(toDto(newsDto, lang));
-
-        });
-
+        newsList.forEach(news -> newsResponseDtos.add(toDto(news, lang)));
         return newsResponseDtos;
-
-
-
     }
 }

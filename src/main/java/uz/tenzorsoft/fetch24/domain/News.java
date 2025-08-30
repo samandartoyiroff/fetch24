@@ -3,7 +3,7 @@ package uz.tenzorsoft.fetch24.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-
+import uz.tenzorsoft.fetch24.model.NewsStatus;
 import java.time.LocalDateTime;
 
 @Entity

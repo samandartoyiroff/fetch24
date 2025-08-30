@@ -3,7 +3,6 @@ package uz.tenzorsoft.fetch24.domain;
 import jakarta.persistence.*;
 import lombok.*;
 import uz.tenzorsoft.fetch24.model.NewsStatus;
-
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,10 +30,12 @@ public class NewsHistory {
 
     private NewsStatus toStatus;
 
+    @Column(columnDefinition = "TEXT")
     private String diffJson;
 
     private LocalDateTime changedAt;
 
+    @PrePersist
     protected void onCreate() {
         changedAt = LocalDateTime.now();
     }

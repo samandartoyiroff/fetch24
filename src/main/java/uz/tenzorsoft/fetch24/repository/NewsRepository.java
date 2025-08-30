@@ -27,10 +27,5 @@ public interface NewsRepository extends JpaRepository<News, Long> {
             "(n.publishedAt <= :now OR n.publishedAt IS NULL) AND " +
             "(n.unpublishAt >= :now OR n.unpublishAt IS NULL)")
     List<News> findAllPubliclyAvailable(@Param("now") LocalDateTime now);
-
-    List<News> findAllByStatusInAndPublishAtBefore(List<NewsStatus> statuses, LocalDateTime now);
-
-    List<News> findAllByStatusAndUnpublishAtBefore(NewsStatus status, LocalDateTime now);
-
 }
 
