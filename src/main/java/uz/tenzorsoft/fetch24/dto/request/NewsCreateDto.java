@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -24,4 +26,34 @@ public class NewsCreateDto {
 
     private String redirectUrl;
 
+    @NotBlank(message = "{news.title.notblank}")
+    private String titleUz;
+
+    @NotBlank(message = "{news.title.notblank}")
+    private String titleRu;
+
+    @NotBlank(message = "{news.title.notblank}")
+    private String titleEn;
+
+    @NotBlank(message = "{news.description.notblank}")
+    private String descriptionUz;
+
+    @NotBlank(message = "{news.description.notblank}")
+    private String descriptionRu;
+
+    @NotBlank(message = "{news.description.notblank}")
+    private String descriptionEn;
+
+    @NotBlank(message = "{news.content.notblank}")
+    private String contentUz;
+
+    @NotBlank(message = "{news.content.notblank}")
+    private String contentRu;
+
+    @NotBlank(message = "{news.content.notblank}")
+    private String contentEn;
+
+    private LocalDateTime publishAt;
+
+    private LocalDateTime unpublishAt;
 }

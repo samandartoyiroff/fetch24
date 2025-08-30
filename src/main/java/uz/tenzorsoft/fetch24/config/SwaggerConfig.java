@@ -1,5 +1,6 @@
 package uz.tenzorsoft.fetch24.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -11,27 +12,24 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-
-
 @Configuration
 @OpenAPIDefinition(
         info = @Info(
-                title = "FETCH 24", // Optional: Qo'shimcha ma'lumot berish uchun
-                version = "1.0", // OpenAPI versiyasi noto'g'ri emas, faqat ma'lumot sifatida
+                title = "FETCH 24",
+                version = "1.0",
                 description = "API Documentation"
         ),
-        security = @SecurityRequirement(name = "bearerAuth") // Apply globally
+        security = @SecurityRequirement(name = "bearerAuth")
 )
 @SecurityScheme(
         name = "bearerAuth",
         type = SecuritySchemeType.HTTP,
         scheme = "bearer",
-        bearerFormat = "JWT", // Optional: Defines the format (JWT)
+        bearerFormat = "JWT",
         in = SecuritySchemeIn.HEADER,
         paramName = "Authorization"
 )
 public class SwaggerConfig {
-
 
     @Bean
     public OperationCustomizer customize() {
@@ -48,4 +46,8 @@ public class SwaggerConfig {
         };
     }
 
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
+    }
 }

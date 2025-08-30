@@ -5,8 +5,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import uz.tenzorsoft.fetch24.domain.News;
 import uz.tenzorsoft.fetch24.dto.request.NewsCreateDto;
+import uz.tenzorsoft.fetch24.dto.request.NewsStatusUpdateDto;
 import uz.tenzorsoft.fetch24.dto.request.NewsUpdateDto;
 import uz.tenzorsoft.fetch24.service.NewsService;
 
@@ -17,39 +17,46 @@ public class NewsController {
 
     private final NewsService newsService;
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EDITOR', 'ROLE_AUTHOR')")
     @PostMapping("/create")
     public ResponseEntity<?> createNews(
             @RequestBody @Valid NewsCreateDto newsCreateDto,
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
-            ) {
-
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
         return newsService.create(newsCreateDto, lang);
-
     }
 
     @GetMapping("/findById/{id}")
     public ResponseEntity<?> findById(
             @PathVariable(name = "id") Long id,
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
-    ){
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
         return newsService.findById(id, lang);
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EDITOR', 'ROLE_AUTHOR')")
     @PutMapping("/updateById/{id}")
     public ResponseEntity<?> updateById(
             @PathVariable Long id,
-            @RequestHeader(name = "lang") String lang,
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang,
             @RequestBody @Valid NewsUpdateDto newsUpdateDto
-            ){
+    ) {
         return newsService.updateById(id, lang, newsUpdateDto);
+    }
+
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EDITOR', 'ROLE_AUTHOR')")
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<?> updateNewsStatus(
+            @PathVariable Long id,
+            @RequestBody @Valid NewsStatusUpdateDto statusUpdateDto
+    ) {
+        return newsService.updateNewsStatus(id, statusUpdateDto);
     }
 
     @GetMapping("/findAllPagination/notDeleted")
     public ResponseEntity<?> findAllPaginationNotDeleted(
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
-    ){
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
         return newsService.findAllNotDeleted(lang);
     }
 
@@ -57,15 +64,24 @@ public class NewsController {
     @DeleteMapping("/soft-delete/{id}")
     public ResponseEntity<?> softDelete(
             @PathVariable Long id,
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
-    ){
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
         return newsService.softDelete(id, lang);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PostMapping("/{id}/restore")
+    public ResponseEntity<?> restoreNews(
+            @PathVariable Long id,
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
+        return newsService.restoreNews(id, lang);
     }
 
     @GetMapping("/findAllPagination/deleted")
     public ResponseEntity<?> findAllPaginationDeleted(
-            @RequestHeader(name = "lang", defaultValue = "uz") String lang
-    ){
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
         return newsService.findAllDeleted(lang);
     }
 
@@ -73,10 +89,22 @@ public class NewsController {
     @DeleteMapping("/hard-delete/{id}")
     public ResponseEntity<?> hardDelete(
             @PathVariable Long id
-    ){
+    ) {
         return newsService.hardDelete(id);
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_EDITOR', 'ROLE_AUTHOR')")
+    @GetMapping("/{id}/history")
+    public ResponseEntity<?> getNewsHistory(
+            @PathVariable Long id
+    ) {
+        return newsService.getNewsHistory(id);
+    }
 
-
+    @GetMapping("/public")
+    public ResponseEntity<?> findAllPublicNews(
+            @RequestHeader(name = "Accept-Language", defaultValue = "uz") String lang
+    ) {
+        return newsService.findAllPublicNews(lang);
+    }
 }
